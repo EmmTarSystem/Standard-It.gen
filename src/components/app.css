@@ -1,0 +1,13 @@
+body{
+    background-color: #e0e0e0;
+}
+
+
+div.main{
+	margin: auto;
+	width: 700px;height: 600px;background:linear-gradient(white, #bfc0c1);text-align: center;
+	border:solid;border-width: 3px;
+    border-radius: 20px;
+    box-shadow: 3px 3px 3px var(--colorTheme1);
+	border-left-color:var(--colorTheme2);border-top-color:var(--colorTheme2);border-right-color:var(--colorTheme2);border-bottom-color: var(--colorTheme2);
+}

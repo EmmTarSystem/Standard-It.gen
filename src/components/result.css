@@ -1,0 +1,36 @@
+/* Div resultat */
+
+div.divResultHidden{
+    display: none;
+}
+
+
+div.divResultVisible{
+    display: block;
+}
+
+
+/* texte resultat*/
+p.resultat{
+    margin-left: 10px;margin-right: 10px;
+    padding-top: 10px;padding-bottom: 10px;
+    border:solid;border-radius: 10px;
+    border-color: var(--colorTheme1);
+    font-weight: bold;
+}
+
+p.nomNormalise{
+    margin-top: 80px;
+}
+
+
+/* Notification copie */
+
+
+p.pCopyNotify{
+    color: var(--colorTheme2);
+    display: inline;
+    font-size: 18px;
+}
+
+
