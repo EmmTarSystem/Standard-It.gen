@@ -4,16 +4,32 @@
     --colorTheme2:#212E53;
     --colorTheme3:whitesmoke;
 
-    /* Mention */
-    --widthDivMention:300px;
-    --borderRadiusDivMention:5px;
-    --marginBottomDivMention:20px;
+    /* Protection */
+    --widthDivProtection:300px;
+    --borderRadiusDivProtection:5px;
+    --marginBottomDivProtection:20px;
     --NPColor:white;
     --DRColor:rgb(244, 231, 115);
     --DR-SFColor:rgb(141, 230, 168);
     --SColor:rgb(248, 132, 111);
     --S-SFColor:rgb(74, 74, 74);
 }
+
+
+
+/* input emetteur */
+
+input.emetteurAbsent{
+    border-style: solid;
+    border-color: red;
+
+}
+
+input.emetteurPresent{
+    color: black;
+}
+
+
 
 /* input du titre */
 
@@ -75,56 +91,56 @@ button.btnClear{
 
 
 
-/* Les div de chaque mention */
-div.localDivMentionClass{
+/* Les div de chaque protection */
+div.localDivProtectionClass{
     display: inline;
     margin-right: 10px;
 }
 
 
-/* MENTION */
+/* PROTECTION */
 
 /* Div du composant */
-div.globalDivMentionClassNP{
+div.globalDivProtectionClassNP{
     background-color:var(--NPColor);
-    width: var(--widthDivMention);
-    border-radius: var(--borderRadiusDivMention);
+    width: var(--widthDivProtection);
+    border-radius: var(--borderRadiusDivProtection);
     margin: auto;
-    margin-bottom: var(--marginBottomDivMention);
+    margin-bottom: var(--marginBottomDivProtection);
 }
 
-div.globalDivMentionClassDR{
+div.globalDivProtectionClassDR{
     background-color:var(--DRColor);
-    width: var(--widthDivMention);
-    border-radius: var(--borderRadiusDivMention);
+    width: var(--widthDivProtection);
+    border-radius: var(--borderRadiusDivProtection);
     margin: auto;
-    margin-bottom: var(--marginBottomDivMention);
+    margin-bottom: var(--marginBottomDivProtection);
 }
 
-div.globalDivMentionClassDR-SF{
+div.globalDivProtectionClassDR-SF{
     background-color:var(--DR-SFColor);
-    width: var(--widthDivMention);
-    border-radius: var(--borderRadiusDivMention);
+    width: var(--widthDivProtection);
+    border-radius: var(--borderRadiusDivProtection);
     margin: auto;
-    margin-bottom: var(--marginBottomDivMention);
+    margin-bottom: var(--marginBottomDivProtection);
 }
 
 
 
-div.globalDivMentionClassS{
+div.globalDivProtectionClassS{
     background-color:var(--SColor);
-    width: var(--widthDivMention);
-    border-radius: var(--borderRadiusDivMention);
+    width: var(--widthDivProtection);
+    border-radius: var(--borderRadiusDivProtection);
     margin: auto;
-    margin-bottom: var(--marginBottomDivMention);
+    margin-bottom: var(--marginBottomDivProtection);
    
 }
 
-div.globalDivMentionClassS-SF{
+div.globalDivProtectionClassS-SF{
     background-color:var(--S-SFColor);
-    width: var(--widthDivMention);
-    border-radius: var(--borderRadiusDivMention);
+    width: var(--widthDivProtection);
+    border-radius: var(--borderRadiusDivProtection);
     margin: auto;
-    margin-bottom: var(--marginBottomDivMention);
+    margin-bottom: var(--marginBottomDivProtection);
     color: white;
 }

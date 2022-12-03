@@ -6,46 +6,54 @@ import Result from './Result';
 
 const Formulaire = () => {
     
-    
+                                                 //STATE
 
-    //Pour modifier l'affichage du titre normalisé ["texte resulat", "class de la div resultat"]
+
+    // Affichage resultat
+    //["texte resulat", "class de la div resultat"]
     const [resultValue,setResultValue] = useState(["","divResultHidden"]);
 
 
-    //Emetteur state
+    //Emetteur 
     var cookieEmetteur = localStorage.getItem("Standard-It Basic Emetteur");
     const [emetteur,setEmetteur] = useState(cookieEmetteur ? cookieEmetteur :"");
 
-    //Mention
-    
-    const [mention,setMention] = useState("NP");
+    //protection
+    const [protection,setProtection] = useState("NP");
 
+
+
+                                        //VARIABILISATION DIVERS
     
-       
+                                        
+    
     //Variabilisation
     var textResult = "";
     const nbreMaxCaractere=60;
     //Tableau des protections
-    const allMentionArray = ["NP","DR","DR-SF","S","S-SF"];
+    const allProtectionArray = ["NP","DR","DR-SF","S","S-SF"];
 
-    // Variable pour nommage class style div selon mention
-    var globalDivMentionClass="globalDivMentionClass"+mention;
+    // Variable pour nommage class style div selon protection
+    var globalDivProtectionClass="globalDivProtectionClass"+protection;
    
+    //variable pour la class de l'emetteur si remplit ou non
+    const inputEmetteurClass = (emetteur !=="" ? "emetteurPresent" : "emetteurAbsent");
+    const resultDisplayValid = (emetteur !=="" ? true : false);
     //Reférence aux elements des formulaires
     const inputTitleRef = useRef();
 
 
 
 
+                                            //EVENTS CHANGE
 
 
-
-    //EVENT CHANGEMENT PROTECTION
-    const onChangeMention = (e)=>{
-        console.log("Changement de la mention pour = " + e);
-        // Set la mention pour reactualisation et clear l'affichage
-        setMention(e);
-        onElementChange();
+    //CHANGEMENT PROTECTION
+    const onChangeProtection = (e)=>{
+        console.log("Changement de la protection pour = " + e);
+        // Set la protection pour reactualisation et clear l'affichage
+        setProtection(e);
+        onHiddenResult();
     }
 
 
@@ -53,29 +61,52 @@ const Formulaire = () => {
 
 
 
-    //EVENT CHANGEMENT EMETTEUR
+    //CHANGEMENT EMETTEUR
     const onChangeEmetteur = (e) =>{
         setEmetteur(e);
         //masque le resultat si non masqué
-        onElementChange();
+        onHiddenResult();
     }
     
    
 
 
-    //EVENT CHANGEMENT TITRE
-    const onTitleChange = () => {
-        onElementChange()
+    //CHANGEMENT TITRE
+    const onChangeTitle = () => {
+        onHiddenResult()
     }
 
     //Cache l'affichage resultat si besoin
-    const onElementChange = () =>{
+    const onHiddenResult = () =>{
         if (resultValue[1] === "divResultVisible") {
             setResultValue(["","divResultHidden"])
             
         };
     };
 
+
+
+                                        //EFFACER
+
+
+
+    const onClickClear = () => {
+        //clear uniquement si necessaire
+        console.log("Clic Effacer")
+        if (inputTitleRef.current.value !== "" || resultValue[1] !== "divResultHidden") {
+            //efface le contenu de l'input
+            inputTitleRef.current.value="";
+            //set les states pour reactualiser l'affichage
+            console.log("Effacement effectué");
+            onHiddenResult();
+        }else{
+            console.log("Rien à effacer");
+        }  
+    };
+
+
+
+                                // PROCESS DE NORMALISATION
 
 
 
@@ -86,7 +117,8 @@ const Formulaire = () => {
         //Vérification champ emetteur avant normalisation
         
         if(emetteur===""){
-            console.log("Le champ est vide !!!!");
+            console.log("Champ EMETTEUR vide !!!!");
+            setResultValue(["Veuillez remplir le champ EMETTEUR !","divResultVisible"]);
         }else{
             onNormalize();
         }
@@ -97,7 +129,7 @@ const Formulaire = () => {
 
 
 
-    // Process de normalisation
+    // lancement de la normalisation
 
     const onNormalize = () => {
         console.log("clic normaliser")
@@ -110,8 +142,8 @@ const Formulaire = () => {
         
 
         //traitement du format orthographe du titre
-        const titre = inputTitleRef.current.value;
-        var titreCorrect = titre;
+        var correctedTitle = inputTitleRef.current.value;
+        
                 
         // Tableau motifs à rempalcer
         const correctionRef = [
@@ -124,35 +156,34 @@ const Formulaire = () => {
           ];
         //Correction
         for(let i = 0; i < correctionRef.length; i++){
-            titreCorrect = titreCorrect.replace(correctionRef[i][0],correctionRef[i][1])
+            correctedTitle = correctedTitle.replace(correctionRef[i][0],correctionRef[i][1])
         };
 
         // 1 Lettre majuscule
-        titreCorrect = titreCorrect.charAt(0).toUpperCase() + titreCorrect.slice(1);
+        correctedTitle = correctedTitle.charAt(0).toUpperCase() + correctedTitle.slice(1);
 
 
         //Traitement du format date 
-        var locDateDuJour = new Date(),
-            year = (locDateDuJour.getFullYear()),
-            tempMonth = (locDateDuJour.getMonth() + 1),
-            tempDay = (locDateDuJour.getDate());
+        var locDateToday = new Date(),
+            year = (locDateToday.getFullYear()),
+            tempMonth = (locDateToday.getMonth() + 1),
+            tempDay = (locDateToday.getDate());
 
         // traitement format 2 digits
         var finalMonth =(tempMonth < 10 ? "0" + tempMonth : tempMonth);
         var finalDay =(tempDay < 10 ? "0" + tempDay : tempDay);
 
         // simplification de la date
-        var locDateFinale = ('' +   year + finalMonth + finalDay);
+        var locFinalDate = ('' +   year + finalMonth + finalDay);
 
 
         //Ecriture résultat finale
-        textResult = locDateFinale+"_"+mention+"_"+emetteur+"_"+titreCorrect;      
+        textResult = locFinalDate+"_"+protection+"_"+emetteur+"_"+correctedTitle;      
       
 
         //Copie dans le clipboard 
-        var toCopy = textResult;
-        navigator.clipboard.writeText(toCopy);
-        console.log("Text copié dans le clipboard = " + toCopy);
+        navigator.clipboard.writeText(textResult);
+        console.log("Text copié dans le clipboard = " + textResult);
         //Set les STATES pour modifier l'affichage
         setResultValue([textResult,"divResultVisible"]);
         
@@ -160,43 +191,23 @@ const Formulaire = () => {
     };
 
 
-   
+    console.log("Chargement formulaire");
 
     
 
-    //EFFACER
-    const onClickClear = () => {
-        //clear uniquement si necessaire
-        console.log("Clic Effacer")
-        if (inputTitleRef.current.value !== "" || resultValue[1] !== "divResultHidden") {
-            //efface le contenu de l'input
-            inputTitleRef.current.value="";
-            //set les states pour reactualiser l'affichage
-            console.log("Effacement effectué")
-            setResultValue(["","divResultHidden"]);
-        }else{
-            console.log("Rien à effacer")
-        }
-        
-        
-        
-    };
+                                                //RENDER
 
-  
-    console.log("chargement formulaire");
 
-    
 
-    //Render
     return (
-        // Mention
+        // protection
         <div>
-            <div className={globalDivMentionClass}>
+            <div className={globalDivProtectionClass}>
                 <form action="" >
-                    {allMentionArray.map(
+                    {allProtectionArray.map(
                     (element,i)=>{
-                        return <div className='localDivMentionClass' key={i}>
-                        <input type="radio" name='classification' onChange={()=>onChangeMention(element)} key={i} value={element} id={element} checked={element===mention}/>
+                        return <div className='localDivProtectionClass' key={i}>
+                        <input type="radio" name='classification' onChange={()=>onChangeProtection(element)} key={i} value={element} id={element} checked={element===protection}/>
                         <label htmlFor={element}>{element}</label>
                         </div>
 
@@ -207,13 +218,13 @@ const Formulaire = () => {
              {/* Input Emetteur */}
              <p>
                 <label htmlFor="">EMETTEUR : </label>
-                <input className='emetteur' type="text" onChange={(e) => onChangeEmetteur(e.target.value)} placeholder={"Exemple : BALARD-CMI"} value={emetteur}/>
+                <input className={inputEmetteurClass} type="text" onChange={(e) => onChangeEmetteur(e.target.value)} placeholder={"Exemple : BALARD-CMI"} value={emetteur}/>
             </p>
           
             {/* Input Title */}
             <p>
                 <label htmlFor="">NOM : </label>
-                <input className='titre' type="text" ref={inputTitleRef} onChange={onTitleChange} maxLength={nbreMaxCaractere} placeholder={nbreMaxCaractere + " caractères maximum / Pas de caractères spéciaux !"} autoFocus={true}/>
+                <input className='titre' type="text" ref={inputTitleRef} onChange={onChangeTitle} maxLength={nbreMaxCaractere} placeholder={nbreMaxCaractere + " caractères maximum / Pas de caractères spéciaux !"} autoFocus={true}/>
             </p>
             
             {/* Button*/}
@@ -223,7 +234,7 @@ const Formulaire = () => {
             </p>
 
             {/* composant resultat */}
-            < Result textToDisplay={resultValue[0]} divResultClass={resultValue[1]} />
+            < Result textToDisplay={resultValue[0]} divResultClass={resultValue[1]} resultValid={resultDisplayValid}/>
                         
         </div>
 
