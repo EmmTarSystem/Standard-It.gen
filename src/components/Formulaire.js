@@ -6,59 +6,111 @@ import Result from './Result';
 
 const Formulaire = () => {
     
-    const allMentionArray = ["NP","DR","DR-SF","S","S-SF"];
+    
 
     //Pour modifier l'affichage du titre normalisé ["texte resulat", "class de la div resultat"]
     const [resultValue,setResultValue] = useState(["","divResultHidden"]);
 
 
+    //Emetteur state
+    var cookieEmetteur = localStorage.getItem("Standard-It Basic Emetteur");
+    const [emetteur,setEmetteur] = useState(cookieEmetteur ? cookieEmetteur :"");
+
     //Mention
     
     const [mention,setMention] = useState("NP");
 
+    
+       
+    //Variabilisation
+    var textResult = "";
+    const nbreMaxCaractere=60;
+    //Tableau des protections
+    const allMentionArray = ["NP","DR","DR-SF","S","S-SF"];
+
     // Variable pour nommage class style div selon mention
     var globalDivMentionClass="globalDivMentionClass"+mention;
+   
+    //Reférence aux elements des formulaires
+    const inputTitleRef = useRef();
 
 
 
-    
 
+
+
+
+    //EVENT CHANGEMENT PROTECTION
     const onChangeMention = (e)=>{
         console.log("Changement de la mention pour = " + e);
         // Set la mention pour reactualisation et clear l'affichage
         setMention(e);
-        onHandleChange();
+        onElementChange();
     }
 
 
-    
-    //Variabilisation
-    var textResult = "";
-    const nbreMaxCaractere=60;
-   
-    //Reférence aux elements des formulaires
-    const inputEmetteurRef = useRef();
-    const inputTitleRef = useRef();
-    console.log(inputEmetteurRef);
 
-    //Mise en place COOKIES EMETTEUR si présent
-    var cookieEmmeteur = localStorage.getItem("Standart-it emetteur")
+
+
+
+    //EVENT CHANGEMENT EMETTEUR
+    const onChangeEmetteur = (e) =>{
+        setEmetteur(e);
+        //masque le resultat si non masqué
+        onElementChange();
+    }
+    
+   
+
+
+    //EVENT CHANGEMENT TITRE
+    const onTitleChange = () => {
+        onElementChange()
+    }
+
+    //Cache l'affichage resultat si besoin
+    const onElementChange = () =>{
+        if (resultValue[1] === "divResultVisible") {
+            setResultValue(["","divResultHidden"])
+            
+        };
+    };
+
+
+
+
+
+    //Vérification avant normalisation
+    const onClickNormalize = () => {
+
+        //Vérification champ emetteur avant normalisation
+        
+        if(emetteur===""){
+            console.log("Le champ est vide !!!!");
+        }else{
+            onNormalize();
+        }
+    }
+
+   
+
+
+
 
     // Process de normalisation
 
-    const onClickNormalize = () => {
+    const onNormalize = () => {
         console.log("clic normaliser")
-        const emetteur = inputEmetteurRef.current.value;
-        const titre = inputTitleRef.current.value;
-
-
-        //Stockage COOKIE Emetteur
-        localStorage.setItem("Standart-it emetteur",emetteur)
-        console.log("Mémorisation cookie" + emetteur);
-
-
+        
+        //Stockage COOKIE Emetteur si nouveau
+        if(cookieEmetteur!==emetteur){
+            localStorage.setItem("Standard-It Basic Emetteur",emetteur)
+            console.log("Mémorisation nouveau cookie emetteur : " + emetteur);
+        }
+        
 
         //traitement du format orthographe du titre
+        const titre = inputTitleRef.current.value;
         var titreCorrect = titre;
                 
         // Tableau motifs à rempalcer
@@ -73,10 +125,10 @@ const Formulaire = () => {
         //Correction
         for(let i = 0; i < correctionRef.length; i++){
             titreCorrect = titreCorrect.replace(correctionRef[i][0],correctionRef[i][1])
-          };
+        };
 
-         // 1 Lettre majuscule
-         titreCorrect = titreCorrect.charAt(0).toUpperCase() + titreCorrect.slice(1);
+        // 1 Lettre majuscule
+        titreCorrect = titreCorrect.charAt(0).toUpperCase() + titreCorrect.slice(1);
 
 
         //Traitement du format date 
@@ -108,15 +160,9 @@ const Formulaire = () => {
     };
 
 
-    // Comportement lorsque l'on tape dans l'input ou change la categorie
-    //masque le précédent résultat si visible
-    const onHandleChange = () =>{
-        if (resultValue[1] === "divResultVisible") {
-            setResultValue(["","divResultHidden"])
-            
-        };
-    };
+   
 
+    
 
     //EFFACER
     const onClickClear = () => {
@@ -161,13 +207,13 @@ const Formulaire = () => {
              {/* Input Emetteur */}
              <p>
                 <label htmlFor="">EMETTEUR : </label>
-                <input className='emetteur' type="text" ref={inputEmetteurRef} onChange={onHandleChange} placeholder={"Exemple : BALARD-CMI"} value={cookieEmmeteur}/>
+                <input className='emetteur' type="text" onChange={(e) => onChangeEmetteur(e.target.value)} placeholder={"Exemple : BALARD-CMI"} value={emetteur}/>
             </p>
           
             {/* Input Title */}
             <p>
                 <label htmlFor="">NOM : </label>
-                <input className='titre' type="text" ref={inputTitleRef} onChange={onHandleChange} maxLength={nbreMaxCaractere} placeholder={nbreMaxCaractere + " caractères maximum / Pas de caractères spéciaux !"} autoFocus={true}/>
+                <input className='titre' type="text" ref={inputTitleRef} onChange={onTitleChange} maxLength={nbreMaxCaractere} placeholder={nbreMaxCaractere + " caractères maximum / Pas de caractères spéciaux !"} autoFocus={true}/>
             </p>
             
             {/* Button*/}
