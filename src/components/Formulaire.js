@@ -50,6 +50,7 @@ const Formulaire = () => {
 
     //CHANGEMENT PROTECTION
     const onChangeProtection = (e)=>{
+        
         console.log("Changement de la protection pour = " + e);
         // Set la protection pour reactualisation et clear l'affichage
         setProtection(e);
@@ -63,9 +64,17 @@ const Formulaire = () => {
 
     //CHANGEMENT EMETTEUR
     const onChangeEmetteur = (e) =>{
-        setEmetteur(e);
-        //masque le resultat si non masqué
-        onHiddenResult();
+        //Bloque les espaces dans le champ EMETTEUR
+        if (e.nativeEvent.data !==" "){
+
+            //force majuscule
+            var textToSet = e.target.value;
+            textToSet = textToSet.toUpperCase();
+            setEmetteur(textToSet);
+            //masque la DIV resultat si non masqué
+            onHiddenResult();
+        }
+        
     }
     
    
@@ -218,7 +227,7 @@ const Formulaire = () => {
              {/* Input Emetteur */}
              <p>
                 <label htmlFor="">EMETTEUR : </label>
-                <input className={inputEmetteurClass} type="text" onChange={(e) => onChangeEmetteur(e.target.value)} placeholder={"Exemple : BALARD-CMI"} value={emetteur}/>
+                <input className={inputEmetteurClass} type="text" onChange={(e) => onChangeEmetteur(e)} placeholder={"Exemple : BALARD-CMI"} value={emetteur}/>
             </p>
           
             {/* Input Title */}
